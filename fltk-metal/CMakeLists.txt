@@ -2,11 +2,11 @@ set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework Cocoa -framewo
   set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -framework Cocoa -framework MetalKit -framework QuartzCore -framework Metal")
 
 set(HDRS
-metal_window.h
+Fl_Metal_Window.h
     )
 	
 set(SRCS
-metal_window.mm
+Fl_Metal_Window.mm
 main.cpp
 )
 

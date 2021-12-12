@@ -7,11 +7,11 @@
 
 #include "metal/Metal.hpp"
 
-class metal_window : public Fl_Window
+class Fl_Metal_Window : public Fl_Window
 {
 public:
-  explicit metal_window(int x, int y, int w, int h, const char* t);
-  virtual ~metal_window();
+  explicit Fl_Metal_Window(int x, int y, int w, int h, const char* t);
+  virtual ~Fl_Metal_Window();
   
   void prepare();
   

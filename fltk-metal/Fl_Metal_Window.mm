@@ -4,19 +4,19 @@
 
 #import <MetalKit/MetalKit.h>
 
-#include "metal_window.h"
+#include "Fl_Metal_Window.h"
 
-metal_window::metal_window(int x, int y, int w, int h, const char* t) : Fl_Window(x, y, w, h, t),
+Fl_Metal_Window::Fl_Metal_Window(int x, int y, int w, int h, const char* t) : Fl_Window(x, y, w, h, t),
 _initialised(false)
 {
   box(FL_NO_BOX);
 }
 
-metal_window::~metal_window()
+Fl_Metal_Window::~Fl_Metal_Window()
 {
 }
 
-void metal_window::prepare()
+void Fl_Metal_Window::prepare()
 {
   NSView *view = [fl_xid(this) contentView];
   NSRect f = view.frame;
@@ -28,7 +28,7 @@ void metal_window::prepare()
   _initialised = true;
 }
 
-void metal_window::draw()
+void Fl_Metal_Window::draw()
 {
   if (!_initialised)
     prepare();
@@ -39,7 +39,7 @@ void metal_window::draw()
   _draw(( __bridge MTL::Device* )metal_layer.device, pMetalCppDrawable);
 }
 
-void metal_window::redraw()
+void Fl_Metal_Window::redraw()
   {
   draw();
   }

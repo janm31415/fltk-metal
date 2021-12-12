@@ -11,7 +11,7 @@
 
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
-#include "metal_window.h"
+#include "Fl_Metal_Window.h"
 
 #include <iostream>
 #include <chrono>
@@ -19,10 +19,10 @@
 #include <vector>
 
 
-class metal_canvas : public metal_window
+class metal_canvas : public Fl_Metal_Window
 {
 public:
-  metal_canvas(int x, int y, int w, int h, const char* t) : metal_window(x, y, w, h, t),
+  metal_canvas(int x, int y, int w, int h, const char* t) : Fl_Metal_Window(x, y, w, h, t),
   mp_device(nullptr), mp_vertex_buffer(nullptr), mp_vertex_index_buffer(nullptr),
   mp_descriptor(nullptr), mp_command_queue(nullptr), mp_material_pipeline(nullptr)
   {
