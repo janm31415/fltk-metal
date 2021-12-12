@@ -21,7 +21,7 @@ add_executable(ftlk-metal-shadertoy ${HDRS} ${SRCS} ${SHADERS})
 source_group("Header Files" FILES ${hdrs})
 source_group("Source Files" FILES ${srcs})
 source_group("Shaders" FILES ${shaders})
-set_source_files_properties(${SHADERS} PROPERTIES LANGUAGEMETAL)
+set_source_files_properties(${SHADERS} PROPERTIES LANGUAGE METAL)
 
  target_include_directories(ftlk-metal-shadertoy
     PRIVATE
