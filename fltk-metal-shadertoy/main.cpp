@@ -23,6 +23,12 @@ struct PoseInfo
   float proj_matrix[16];
 };
 
+struct ShaderInfo
+{
+  float resolution_x, resolution_y;
+  float time;
+};
+
 class metal_canvas : public Fl_Metal_Window
 {
 public:
@@ -42,12 +48,17 @@ public:
     _pose_info.proj_matrix[7] = 0;
     _pose_info.proj_matrix[8] = 0;
     _pose_info.proj_matrix[9] = 0;
-    _pose_info.proj_matrix[10] = 1;
-    _pose_info.proj_matrix[11] = 0;
+    _pose_info.proj_matrix[10] = 0;
+    _pose_info.proj_matrix[11] = -1;
     _pose_info.proj_matrix[12] = 0;
     _pose_info.proj_matrix[13] = 0;
     _pose_info.proj_matrix[14] = 0;
     _pose_info.proj_matrix[15] = 1;
+    
+    _shader_info.resolution_x = (float)w;
+    _shader_info.resolution_y = (float)h;
+    
+    _start = std::chrono::high_resolution_clock::now();
   }
   
   virtual ~metal_canvas()
@@ -112,11 +123,14 @@ private:
     MTL::CommandBuffer* commandBuffer = mp_command_queue->commandBuffer();
     commandBuffer->addCompletedHandler([&](MTL::CommandBuffer* buf){dispatch_semaphore_signal(this->m_in_flight_semaphore);});
     
+    _shader_info.time = (float)(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - _start).count()) / 1000000.f;
+    
     mp_descriptor->colorAttachments()->object(0)->setTexture(drawable->texture());
     MTL::RenderCommandEncoder* drawOnScreenCommandEncoder = commandBuffer->renderCommandEncoder(mp_descriptor);
      drawOnScreenCommandEncoder->setRenderPipelineState(mp_material_pipeline);
     drawOnScreenCommandEncoder->setVertexBuffer(mp_vertex_buffer, 0, 0);
     drawOnScreenCommandEncoder->setVertexBytes(&_pose_info, sizeof(PoseInfo), 1);
+    drawOnScreenCommandEncoder->setFragmentBytes(&_shader_info, sizeof(ShaderInfo), 1);
     drawOnScreenCommandEncoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, 6, MTL::IndexTypeUInt32, mp_vertex_index_buffer, 0);
     drawOnScreenCommandEncoder->endEncoding();
   
@@ -133,6 +147,8 @@ private:
   MTL::CommandQueue* mp_command_queue;
   MTL::RenderPipelineState* mp_material_pipeline;
   PoseInfo _pose_info;
+  ShaderInfo _shader_info;
+  std::chrono::steady_clock::time_point _start;
 };
 
 class fltk_metal_window : public Fl_Double_Window

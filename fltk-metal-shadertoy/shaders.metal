@@ -20,6 +20,19 @@ vertex VertexOut vertex_shader(const device VertexIn *vertices [[buffer(0)]], ui
   return out;
 }
 
-fragment float4 fragment_shader(const VertexOut vertexIn [[stage_in]]) {
-  return float4(1, 0, 0, 1);
+struct ShaderInfo {
+  packed_float2 iResolution;
+  float iTime;
+};
+
+fragment float4 fragment_shader(const VertexOut vertexIn [[stage_in]], constant ShaderInfo& info [[buffer(1)]]) {
+  // Normalized pixel coordinates (from 0 to 1)
+  float2 uv = vertexIn.position.xy/info.iResolution.xy;
+        
+  // Time varying pixel color
+  float3 col = 0.5 + 0.5*cos(info.iTime+uv.xyx+float3(0,2,4));
+  
+  // Output to screen
+  return float4(col, 1);
+
 }
