@@ -9,4 +9,4 @@ All dependencies are delivered with the code, but FLTK is delivered as submodule
 
     git submodule update --init    
     
-before you build the code with [CMake](https://cmake.org).
+before you make an Xcode project with [CMake](https://cmake.org).
