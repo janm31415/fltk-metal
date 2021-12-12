@@ -23,8 +23,7 @@ class metal_canvas : public Fl_Metal_Window
 {
 public:
   metal_canvas(int x, int y, int w, int h, const char* t) : Fl_Metal_Window(x, y, w, h, t),
-  mp_device(nullptr), mp_vertex_buffer(nullptr), mp_vertex_index_buffer(nullptr),
-  mp_descriptor(nullptr), mp_command_queue(nullptr), mp_material_pipeline(nullptr)
+  mp_device(nullptr), mp_descriptor(nullptr), mp_command_queue(nullptr)
   {
     m_in_flight_semaphore = dispatch_semaphore_create(1);
     resizable(this);
@@ -32,16 +31,10 @@ public:
   
   virtual ~metal_canvas()
   {
-    if (mp_vertex_buffer)
-      mp_vertex_buffer->release();
-    if (mp_vertex_index_buffer)
-      mp_vertex_index_buffer->release();
     if (mp_descriptor)
       mp_descriptor->release();
     if (mp_command_queue)
       mp_command_queue->release();
-    if (mp_material_pipeline)
-      mp_material_pipeline->release();
   }
   
   
@@ -78,11 +71,8 @@ private:
 private:
   MTL::Device* mp_device;
   dispatch_semaphore_t m_in_flight_semaphore;
-  MTL::Buffer* mp_vertex_buffer;
-  MTL::Buffer* mp_vertex_index_buffer;
   MTL::RenderPassDescriptor* mp_descriptor;
   MTL::CommandQueue* mp_command_queue;
-  MTL::RenderPipelineState* mp_material_pipeline;
 };
 
 class fltk_metal_window : public Fl_Double_Window
