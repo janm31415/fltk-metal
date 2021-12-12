@@ -114,7 +114,7 @@ private:
 int main(int argc, char** argv)
 {
   int result = -1;
-  fltk_metal_window* window = new fltk_metal_window(100, 100, 800, 450, "fltk-metal");
+  fltk_metal_window* window = new fltk_metal_window(100, 100, 800, 450, "fltk-metal-simple");
   window->end();
   window->show(argc, argv);
   while (Fl::check())

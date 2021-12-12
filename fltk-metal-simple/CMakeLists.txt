@@ -1,5 +1,5 @@
-set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework Cocoa -framework MetalKit -framework QuartzCore -framework Metal")
-  set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -framework Cocoa -framework MetalKit -framework QuartzCore -framework Metal")
+set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework Cocoa -framework QuartzCore -framework Metal")
+set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -framework Cocoa -framework QuartzCore -framework Metal")
 
 set(HDRS
 ../fltk-metal/Fl_Metal_Window.h
@@ -25,5 +25,4 @@ source_group("Source Files" FILES ${srcs})
 	
 target_link_libraries(ftlk-metal-simple
     fltk
-    fltk_images
     )	
