@@ -18,6 +18,10 @@
 
 #include <vector>
 
+struct PoseInfo
+{
+  float proj_matrix[16];
+};
 
 class metal_canvas : public Fl_Metal_Window
 {
@@ -28,6 +32,22 @@ public:
   {
     m_in_flight_semaphore = dispatch_semaphore_create(1);
     resizable(this);
+    _pose_info.proj_matrix[0] = 1;
+    _pose_info.proj_matrix[1] = 0;
+    _pose_info.proj_matrix[2] = 0;
+    _pose_info.proj_matrix[3] = 0;
+    _pose_info.proj_matrix[4] = 0;
+    _pose_info.proj_matrix[5] = 1;
+    _pose_info.proj_matrix[6] = 0;
+    _pose_info.proj_matrix[7] = 0;
+    _pose_info.proj_matrix[8] = 0;
+    _pose_info.proj_matrix[9] = 0;
+    _pose_info.proj_matrix[10] = 1;
+    _pose_info.proj_matrix[11] = 0;
+    _pose_info.proj_matrix[12] = 0;
+    _pose_info.proj_matrix[13] = 0;
+    _pose_info.proj_matrix[14] = 0;
+    _pose_info.proj_matrix[15] = 1;
   }
   
   virtual ~metal_canvas()
@@ -54,6 +74,31 @@ private:
     mp_descriptor = MTL::RenderPassDescriptor::alloc()->init();
     mp_descriptor->colorAttachments()->object(0)->setClearColor(MTL::ClearColor(0.12, 0.38, 0.85, 1));
     mp_descriptor->colorAttachments()->object(0)->setLoadAction(MTL::LoadActionClear);
+    
+    float vertices[12] = {-1.f,-1.f,0.f,1.f,-1.f,0.f,1.f,1.f,0.f,-1.f,1.f,0.f};
+    uint32_t indices[6] = {0,1,2,0,2,3};
+    
+    MTL::ResourceOptions options = 0;
+    mp_vertex_buffer = mp_device->newBuffer((const void*)vertices, sizeof(float)*12, options);
+    mp_vertex_index_buffer = mp_device->newBuffer((const void*)indices, 6*sizeof(uint32_t), options);
+    
+    MTL::Library* lib = mp_device->newDefaultLibrary();
+    NS::String* vf_name = NS::String::string("vertex_shader", NS::UTF8StringEncoding);
+    MTL::Function* vertex_function = lib->newFunction(vf_name);
+    NS::String* ff_name = NS::String::string("fragment_shader", NS::UTF8StringEncoding);
+    MTL::Function* fragment_function = lib->newFunction(ff_name);
+    
+    MTL::RenderPipelineDescriptor* descr = MTL::RenderPipelineDescriptor::alloc()->init();
+    descr->setVertexFunction(vertex_function);
+    descr->setFragmentFunction(fragment_function);
+    descr->colorAttachments()->object(0)->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
+    descr->setDepthAttachmentPixelFormat(MTL::PixelFormatInvalid);
+    
+    NS::Error* err;
+    mp_material_pipeline = mp_device->newRenderPipelineState(descr, &err);
+    
+    descr->release();
+    lib->release();
   }
   
   virtual void _draw(MTL::Device* device, CA::MetalDrawable* drawable)
@@ -69,6 +114,10 @@ private:
     
     mp_descriptor->colorAttachments()->object(0)->setTexture(drawable->texture());
     MTL::RenderCommandEncoder* drawOnScreenCommandEncoder = commandBuffer->renderCommandEncoder(mp_descriptor);
+     drawOnScreenCommandEncoder->setRenderPipelineState(mp_material_pipeline);
+    drawOnScreenCommandEncoder->setVertexBuffer(mp_vertex_buffer, 0, 0);
+    drawOnScreenCommandEncoder->setVertexBytes(&_pose_info, sizeof(PoseInfo), 1);
+    drawOnScreenCommandEncoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, 6, MTL::IndexTypeUInt32, mp_vertex_index_buffer, 0);
     drawOnScreenCommandEncoder->endEncoding();
   
     commandBuffer->presentDrawable(drawable);
@@ -83,6 +132,7 @@ private:
   MTL::RenderPassDescriptor* mp_descriptor;
   MTL::CommandQueue* mp_command_queue;
   MTL::RenderPipelineState* mp_material_pipeline;
+  PoseInfo _pose_info;
 };
 
 class fltk_metal_window : public Fl_Double_Window
@@ -107,7 +157,6 @@ public:
   
 private:
   metal_canvas* _metal_canvas;
-  
 };
 
 
