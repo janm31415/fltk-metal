@@ -11,7 +11,7 @@
 
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
-#include "Fl_Metal_Window.h"
+#include "fltk-metal/Fl_Metal_Window.h"
 
 #include <iostream>
 #include <chrono>

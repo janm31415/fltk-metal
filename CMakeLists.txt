@@ -12,5 +12,5 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option (FLTK_BUILD_TEST     "Build test/demo programs" OFF)
 
-add_subdirectory(fltk-metal)
+add_subdirectory(fltk-metal-simple)
 add_subdirectory(fltk)
