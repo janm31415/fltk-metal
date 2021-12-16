@@ -10,6 +10,7 @@ Fl_Metal_Window::Fl_Metal_Window(int x, int y, int w, int h, const char* t) : Fl
 _initialised(false)
 {
   box(FL_NO_BOX);
+  end();
 }
 
 Fl_Metal_Window::~Fl_Metal_Window()
@@ -40,6 +41,11 @@ void Fl_Metal_Window::draw()
 }
 
 void Fl_Metal_Window::redraw()
-  {
+{
+  damage(FL_DAMAGE_ALL);
+}
+
+void Fl_Metal_Window::flush()
+{
   draw();
-  }
+}

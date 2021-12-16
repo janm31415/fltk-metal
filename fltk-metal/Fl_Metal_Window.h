@@ -19,6 +19,8 @@ public:
   
   virtual void redraw();
   
+  virtual void flush();
+  
 private:
   
   virtual void _draw(MTL::Device* device, CA::MetalDrawable* drawable) = 0;

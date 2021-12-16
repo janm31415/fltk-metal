@@ -95,6 +95,12 @@ public:
     Fl_Double_Window::redraw();
   }
   
+  virtual void flush()
+  {
+    _metal_canvas->flush();
+    Fl_Double_Window::flush();
+  }  
+  
 private:
   metal_canvas* _metal_canvas;
   
